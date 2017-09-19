@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flickr Searchaganza</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="scripts/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript">
+		function clearGallery() {
+			document.getElementById('thumbContainer').innerHTML = "";
+			
+			document.getElementById('gallery_image').src=("")
+			
+		}
+		
+	</script>
+	
+	<script type="text/javascript">
+		function searchFlickr() {
+			var searchQuery = document.getElementById("search").value;
+			
+
+			var flickerAPI = "http://api.flickr.com/services/feeds/photos_public.gne?format=json&jsoncallback=?";
+			
+			var i;
+
+			$.getJSON( flickerAPI, {
+				tags: document.getElementById("search").value,
+				tagmode: "any",
+				format: "json",
+				safesearch: "on"
+			})
+			.done(function( data ) {
+				$.each( data.items, function( i, item ) {
+					$( "<img>" ).attr( "src", item.media.m ).attr("id", i++).attr( "hspace", "6px").attr("onclick", "document.getElementById('gallery_image').src=(this.src)").attr("class", "img-thumbnail").attr("width", "150px").appendTo( "#thumbContainer" );
+
+
+				});
+				
+				(document.getElementById('gallery_image').src=(document.getElementById('0').src));
+				(document.getElementById('search').value=(""))
+
+			});
+
+		};
+	</script>
+</head>
+<header class="header">
+		<h1>Flickr Gallery</h1>
+		<form class="searchform" action="javascript:searchFlickr();">
+			<input type="text" name="query" class="search" id="search" placeholder="Search" required />
+			<br/>
+			<button class="searchButton" id="searchButton" >Find Me Some Pictures!</button>
+			<br/>
+		</form>
+		<button class="clearButton" id="clearButton" onclick="clearGallery()">Clear</button>
+
+</header>
+
+<body>
+	<div id="gallery" class="gallery">
+		<div id="viewContainer" class="viewContainer">
+			<img src="" class="gallery_image" id="gallery_image" height="100%" style ="max-height: 350px"/>
+		</div>
+		<div id="thumbContainer" class="thumbContainer">
+			<!--<ul class="thumbnails_list"></ul>
+			<ol class="thumbnails_page"></ol>-->
+		</div>
+	</div>
+</body>
+</html>
